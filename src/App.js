@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import List from './composition/List';
 import './App.css';
 
-function App() {
+function AppAlt(props) {
+  let listSections = [];
+  for (const list of props.store.lists) {
+    let cardsArray = [];
+    for (const cardId of list.cardIds) {
+      cardsArray.push(props.store.allCards[cardId]);
+    };
+    listSections.push(
+      <List
+        key={list.id}
+        header={list.header}
+        cards={cardsArray}
+      />
+    )
+  }
   return (
-    <div className="App">
+    <main className='App'>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Trelloyes!</h1>
       </header>
-    </div>
+      <div className="App-list">
+        {listSections}
+      </div>
+    </main>
   );
+}
+
+class App extends Component {
+  render() {
+    const { store } = this.props
+    return (
+      <main className='App'>
+        <header className='App-header'>
+          <h1>Trelloyes!</h1>
+        </header>
+        <div className='App-list'>
+          {store.lists.map(list => (
+            <List
+              key={list.id}
+              header={list.header}
+              cards={list.cardIds.map(id => store.allCards[id])}
+            />
+          ))}
+        </div>
+      </main>
+    )
+  }
 }
 
 export default App;
